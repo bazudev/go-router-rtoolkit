@@ -14,5 +14,8 @@ func handler(w http.ResponseWriter, r *http.Request) {
 
 func main() {
 	http.HandleFunc("/", handler)
+	http.HandleFunc("/test", func(w http.ResponseWriter, r *http.Request) {
+		fmt.Fprintf(w, "hello test in go router")
+	})
 	log.Fatal(http.ListenAndServe(":8080", nil))
 }
