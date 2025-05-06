@@ -2,20 +2,23 @@ package main
 
 import (
 	"fmt"
-	"log"
+	"go-router-rtoolkit/router"
 	"net/http"
 )
 
-func handler(w http.ResponseWriter, r *http.Request) {
-
-	fmt.Fprintf(w, "hello , go router rtookit")
-
-}
-
 func main() {
-	http.HandleFunc("/", handler)
-	http.HandleFunc("/test", func(w http.ResponseWriter, r *http.Request) {
-		fmt.Fprintf(w, "hello test in go router")
+
+	r := router.NewRouter()
+	r.HandleFunc("GET", "/test/{name}", func(w http.ResponseWriter, r *http.Request) {
+		name := router.Param(r, "name")
+		fmt.Fprintf(w, "Hello test %s", name)
 	})
-	log.Fatal(http.ListenAndServe(":8080", nil))
+	r.HandleFunc("GET", "/hello/{name}", func(w http.ResponseWriter, r *http.Request) {
+		name := router.Param(r, "name")
+		fmt.Fprintf(w, "change %s", name)
+	})
+
+	fmt.Println("Server running at http://localhost:8080")
+	http.ListenAndServe(":8080", r)
+
 }
